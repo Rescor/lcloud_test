@@ -10,6 +10,14 @@ AWS.config.update({
 const s3 = new AWS.S3();
 const localFilesFolder = 'files';
 
+function generateRegex(substring) {
+  const escapedSubstring = substring.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return new RegExp(escapedSubstring);
+}
+
+const substring = 'photo';
+const regex = generateRegex(substring);
+
 // List files in the bucket
 async function listAllFiles(bucket, prefix) {
   const params = {
@@ -41,8 +49,6 @@ async function uploadLocalFiles(bucket, folder) {
 }
 
 // List files by regex
-const regex = /^.*$/;
-
 async function listFilesByRegex(bucket, prefix, regex) {
   const params = {
     Bucket: bucket,
@@ -55,8 +61,6 @@ async function listFilesByRegex(bucket, prefix, regex) {
 }
 
 // Delete files by regex
-const regexToDelete = /^.*$/;
-
 async function deleteFilesByRegex(bucket, prefix, regex) {
   const params = {
     Bucket: bucket,
@@ -81,5 +85,5 @@ async function deleteFilesByRegex(bucket, prefix, regex) {
 
 //listAllFiles('developer-task', 'a-wing');
 //uploadLocalFiles('developer-task', localFilesFolder);
-//listFilesByRegex('developer-task', 'a-wing', regex);
-deleteFilesByRegex('developer-task', 'a-wing', regexToDelete);
+listFilesByRegex('developer-task', 'a-wing', regex);
+//deleteFilesByRegex('developer-task', 'a-wing', regex);
