@@ -99,7 +99,12 @@ async function deleteFilesByRegex(bucket, prefix, regex) {
   }
 }
 
-listAllFiles('developer-task', 'a-wing');
+listAllFiles('developer-task', 'a-wing')
+  .then(() => uploadLocalFiles('developer-task', localFilesFolder))
+  .then(() => listFilesByRegex('developer-task', 'a-wing', regex))
+  .then(() => deleteFilesByRegex('developer-task', 'a-wing', regex))
+
+//listAllFiles('developer-task', 'a-wing');
 //uploadLocalFiles('developer-task', localFilesFolder);
 //listFilesByRegex('developer-task', 'a-wing', regex);
 //deleteFilesByRegex('developer-task', 'a-wing', regex);
