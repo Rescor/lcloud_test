@@ -40,7 +40,7 @@ async function uploadLocalFiles(bucket, folder) {
   }
 }
 
-// REGEX
+// List files by regex
 const regex = /^.*$/;
 
 async function listFilesByRegex(bucket, prefix, regex) {
@@ -54,6 +54,32 @@ async function listFilesByRegex(bucket, prefix, regex) {
   files.forEach(object => console.log(object.Key));
 }
 
+// Delete files by regex
+const regexToDelete = /^.*$/;
+
+async function deleteFilesByRegex(bucket, prefix, regex) {
+  const params = {
+    Bucket: bucket,
+    Prefix: prefix
+  };
+
+  const data = await s3.listObjects(params).promise();
+  const files = data.Contents.filter(object => regex.test(object.Key));
+
+  if (files.length === 0) {
+    return console.log("No files found.");
+  }
+
+  const deleteParams = {
+    Bucket: bucket,
+    Delete: { Objects: files.map(object => ({ Key: object.Key })) }
+  };
+
+  await s3.deleteObjects(deleteParams).promise();
+  console.log("Files deleted successfully.");
+}
+
 //listAllFiles('developer-task', 'a-wing');
 //uploadLocalFiles('developer-task', localFilesFolder);
-listFilesByRegex('developer-task', 'a-wing', regex);
+//listFilesByRegex('developer-task', 'a-wing', regex);
+deleteFilesByRegex('developer-task', 'a-wing', regexToDelete);
