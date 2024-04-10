@@ -40,5 +40,20 @@ async function uploadLocalFiles(bucket, folder) {
   }
 }
 
-listAllFiles('developer-task', 'a-wing');
-uploadLocalFiles('developer-task', localFilesFolder);
+// REGEX
+const regex = /^.*$/;
+
+async function listFilesByRegex(bucket, prefix, regex) {
+  const params = {
+    Bucket: bucket,
+    Prefix: prefix
+  };
+
+  const data = await s3.listObjects(params).promise();
+  const files = data.Contents.filter(object => regex.test(object.Key));
+  files.forEach(object => console.log(object.Key));
+}
+
+//listAllFiles('developer-task', 'a-wing');
+//uploadLocalFiles('developer-task', localFilesFolder);
+listFilesByRegex('developer-task', 'a-wing', regex);
